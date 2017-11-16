@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}OptMiz.it IManager{% endblock %}
+
+{% block bodytop %}
+	<script src="{{ asset('tools.js', 'script') }}"></script>
+	<script src="{{ asset('behaviours.js', 'script') }}"></script>
+	<script src="{{ asset('optmiz-sdk.js', 'script') }}">
+        {
+            "apikey": "26f74aba-863d-4fd0-b29d-2b24d22e3531",
+            "onLoad": "onEndLoad",
+            "lang":"fr_FR"
+        }
+	</script>
+	<script src="{{ asset('main.js', 'script') }}"></script>
+	<script>
+		/*
+		 Please: note usage contraints of the script optimz-sdk.js's inclusion
+		 - SDK.JS MUST be named "optimz-sdk.js" ! it's MANDATORY
+		 - apikey, lang and onEndLoad callback have to be set
+		 ==> between this <script> < /script> inclusion
+		 ==> as a Json Object containing only string keys and values
+
+		 initialize OPTMIZ SDK, have to be done after all
+		 */
+        OPTMIZ = optmiz();
+        OPTMIZ.init();
+        //OPTMIZ.API().image.callbacks={cbDelete:onDeleted};
+
+        $(document).ready(function () {
+            if (OPTMIZ.USER().loadFromStorage()) {
+                onAfterLogin(OPTMIZ.USER(), 'storage');
+			} else {
+                // display login form
+                $('.signin-form').show();
+			}
+        });
+	</script>
+	<script src="{{ asset('jquery-validation/dist/jquery.validate.min.js', 'vendor') }}"></script>
+{% endblock %}
+
+
+
+{% block bodymiddle %}
+<div id="dialog-form" title="Edit image coordinates" style="height:480px;width:600px"></div>
+
+<div id="upload-form" title="new image coordinates"  style="height:480px;width:600px"></div>
+  
+<div class="ui-layout-north">
+	<div class="ui-layout-west"><img src="assets/img/iMager.png" height="50"></div>
+	<div class="ui-layout-center"></div>
+	<div id="userinfo" class="ui-layout-east"><a href="">Sign In!</a></div>
+</div>
+<div id="main" class="ui-layout-center upload">
+	<div class="signin-form" style="display:none">
+		<div class="container">
+			<form class="form-signin" method="post" id="login-form">
+				<h2 class="form-signin-heading">Log In to OptMiz.it</h2>
+				<hr/>
+				<div id="error">
+					<!-- error will be shown here ! -->
+				</div>
+				<div class="form-group">
+					<input type="username" class="form-control" placeholder="username" name="username"
+						   id="username"/>
+					<span id="check-e"></span>
+				</div>
+				<div class="form-group">
+					<input type="password" class="form-control" placeholder="Password" name="password"
+						   id="password"/>
+				</div>
+				<hr/>
+				<div class="form-group">
+					<button type="submit" class="btn btn-default" name="btn-login" id="btn-login">
+						<span class="glyphicon glyphicon-log-in"></span> &nbsp; Sign In
+					</button>
+					<button type="submit" class="btn btn-default" name="btn-subscribe" id="btn-subscribe">
+						<span class="glyphicon glyphicon-edit"></span> &nbsp; Subscribe
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="ui-layout-east"></div>
+<div class="ui-layout-west">
+	<div class="four columns offset-by-one filetree-block">
+		<ul class='jqueryFileTree' style="display: block">
+		  <li class="directory expanded home">
+		  	<div class="tree-node-el tree-node-leaf x-unselectable" style="padding-left:0"><span class="tree-node-indent">
+				<i class="tree-node-icon fa fa-lg fa-fw fa-2x icon-silver fa-home"></i>
+				<a rel="/">root</a>
+			  </span></div>
+			  <ul class='filetree expanded' style="padding-left: 0;"></ul>
+		  </li>
+		</ul>
+  </div>
+</div>
+{% endblock %}
+
+
+
+{% block bodybottom %}
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+  <script src="{{ asset('jqueryfiletree/dist/jQueryFileTree.js', 'vendor-modif') }}"></script>
+	<script>
+        outerLayout = $('body').layout(layoutSettings_Outer);
+        northLayout = $("div.ui-layout-north").layout( layoutSettings_North );
+	</script>
+{% endblock %}
+

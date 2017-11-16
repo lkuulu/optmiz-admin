@@ -1,0 +1,37 @@
+{# views/base.html.twig #}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Test Application{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('admin.css', 'css') }}">
+    <link rel="stylesheet" href="{{ asset('bootstrap/dist/css/bootstrap.min.css', 'vendor') }}">
+    <link rel="stylesheet" href="{{ asset('jqueryfiletree/dist/jqueryFileTree.css', 'vendor-modif') }}">
+    <link rel="stylesheet" href="{{ asset('layout-default-latest.css', 'css') }}">
+    <link rel="stylesheet" href="{{ asset('lightbox2/dist/css/lightbox.css','vendor') }}">
+    <link rel="stylesheet" href="{{ asset('jQuery-contextMenu/dist/jquery.contextMenu.css', 'vendor') }}" type="text/css"/>
+    <script src="{{ asset('jquery/dist/jquery.min.js', 'vendor') }}"></script>
+    <link rel="stylesheet" href="{{ asset('jquery-ui/themes/base/jquery-ui.css', 'vendor') }}">
+    <script src="{{ asset('lightbox2/dist/js/lightbox.js', 'vendor') }}"></script>
+    <script src="{{ asset('jquery-ui/jquery-ui.js', 'vendor') }}"></script>
+    <script src="{{ asset('Jcrop/js/Jcrop.min.js', 'vendor') }}"></script>
+    <link rel="stylesheet" href="{{ asset('Jcrop/css/Jcrop.min.css', 'vendor') }}" type="text/css"/>
+    <script src="{{ asset('jquery.layout-latest.js', 'script') }}"></script>
+    <script src="{{ asset('view-thumb.js', 'script') }}"></script>
+    <script src="{{ asset('view-preview.js', 'script') }}"></script>
+    <script src="{{ asset('view-filetree.js', 'script') }}"></script>
+    <script src="{{ asset('view-user.js', 'script') }}"></script>
+    <script src="{{ asset('formstone/src/js/core.js', 'vendor') }}"></script>
+    <script src="{{ asset('formstone/src/js/upload.js', 'vendor') }}"></script>
+    <link rel="stylesheet" href="{{ asset('formstone/dist/css/upload.css', 'vendor') }}" type="text/css"/>
+    <script src="{{ asset('jQuery-contextMenu/dist/jquery.contextMenu.js', 'vendor') }}" type="text/javascript"></script>
+    <script src="{{ asset('jQuery-contextMenu/dist/jquery.ui.position.min.js', 'vendor') }}" type="text/javascript"></script>
+    <link rel="stylesheet" href="{{ asset('jquery-confirm2/css/jquery-confirm.css', 'vendor') }}" type="text/css"/>
+    <script src="{{ asset('jquery-confirm2/js/jquery-confirm.js', 'vendor') }}" type="text/javascript"></script>
+</head>
+<body>
+{% block bodytop %}{% endblock %}
+{% block bodymiddle %}{% endblock %}
+{% block bodybottom %}{% endblock %}
+</body>
+</html>
