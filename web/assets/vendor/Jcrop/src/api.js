@@ -314,6 +314,7 @@
     //}}}
     // getContainerSize: function(){{{
     getContainerSize: function(){
+      console.log(this.container.width(), this.container.height() );
       return [ this.container.width(), this.container.height() ];
     },
     // }}}

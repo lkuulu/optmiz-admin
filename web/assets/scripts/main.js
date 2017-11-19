@@ -440,8 +440,10 @@ function attachUpload(uploadScript, onBeforeAuthentication) {
 
 function onEndAnimate(newCoord) {
     window.clearTimeout(endAnimate);
+//    console.log(newCoord);
+//    console.log('before : ',edImage);
     edImage = $.extend(true, edImage, newCoord)
-
+//    console.log('after : ',edImage);
 }
 
 function callBackEndAnimate(newCoord) {
@@ -455,7 +457,7 @@ function showCoords(c) {
     // attach coordinate bubble to selection
     $('.jcrop-selection').prepend(coords);
 
-    let extraCoords = extrapolate([c.x, c.y, c.w, c.h], instance.getContainerSize()[0], edImage.size[0]);
+    let extraCoords = extrapolate([c.x, c.y, c.w, c.h], edImage.size[0], editorImageWidth);
     let coordHtml = extraCoords[0] + ' &times ' + extraCoords[1] + ((currentCropName != 'poi') ? ' <br \> ' + extraCoords[2] + ' &times ' + extraCoords[3] : '')
     coords.html(coordHtml);
 
@@ -487,8 +489,9 @@ function showCoords(c) {
 /*
  *   get real coordinates from reduced editform viewport
  */
+//function extrapolate(coord, viewportWidth,imageWidth) {
 function extrapolate(coord, viewportWidth,imageWidth) {
-    let ratio = (editMode===emNew) ? 1 : (imageWidth/viewportWidth);
+    let ratio = (editMode===emNew) ? 1 : (viewportWidth/imageWidth);
     coord[0] = Math.round(coord[0] * ratio);
     coord[1] = Math.round(coord[1] * ratio);
     coord[2] = Math.round(coord[2] * ratio);
@@ -500,11 +503,6 @@ function extrapolate(coord, viewportWidth,imageWidth) {
  * init Jcrop to the image w correct ratio to setup
  */
 function setJcrop(name, extended, image, imgId) {
-
-    // let baseSize = $.extend(true, {trueSize: [image['size'][0], image['size'][1]]}, initCrop);
-    // console.log(baseSize);
-    // base = $.extend(true, {}, baseSize);
-
     base = $.extend(true, {}, initCrop);
 
     $.extend(true, base, extended);
@@ -512,8 +510,8 @@ function setJcrop(name, extended, image, imgId) {
         instance.destroy();
     }
 
-    // console.log(name, extended, image, imgId);
-
+    let imageWidth= image['size'][0];
+    let imageHeight = image['size'][1];
     $('#' + imgId).Jcrop(
         base,
         function () {
@@ -521,13 +519,13 @@ function setJcrop(name, extended, image, imgId) {
             instance.newSelection();
             if (image['crops'] !== null && (typeof image['crops'] !== 'undefined') && typeof image['crops'][name] !== 'undefined') {
                 c = image['crops'][name];
-                instance.animateTo(extrapolate([c['x'], c['y'], c['w'], c['h']], image['size'][0], instance.getContainerSize()[0]));
+                instance.animateTo(extrapolate([c.x, c.y, c.w, c.h], editorImageWidth, imageWidth));
             } else if ((image[name] !== null) && (typeof image[name] !== 'undefined')) {
                 c = image[name];
-                instance.animateTo(extrapolate([c['x'], c['y'], 1, 1], image['size'][0], instance.getContainerSize()[0]));
+                instance.animateTo(extrapolate([c.x, c.y, 1, 1], editorImageWidth, imageWidth));
             } else if (name === 'poi') {
-                // goto image center, in case of poi only
-                instance.animateTo(extrapolate([(image['size'][0] / 2), (image['size'][1] / 2), 1, 1], image['size'][0], instance.getContainerSize()[0]));
+                // image center, in case of poi only
+                instance.animateTo(extrapolate([(imageWidth / 2), (imageHeight / 2), 1, 1], editorImageWidth, imageWidth));
             }
         }
     );
@@ -623,7 +621,6 @@ function moveFile(source, destination) {
     let sourceFileArr = sourceFile.split('/');
     let sourceFileName = sourceFileArr.pop();
     let destinationFile = destinationPath + sourceFileName
-    // console.log(sourceFile, destinationFile, "s"+sourcePath);
     OPTMIZ.API().file.move(sourceFile, destinationFile, function (result) {
         $.loadThumbs(currentFolder);
     });
@@ -823,6 +820,7 @@ function onRatioItemClick(key, options) {
 function updatePoi() {
     let valid = true;
     if (valid) {
+        console.log(edImage);
         saveImage(edImage);
     }
     return valid;
@@ -881,13 +879,6 @@ function initUploadForm(popin) { //, image) {
     //edImage = image;
 
     editMode = emNew;
-
-// <option value=\"poi\">Point of interest</option>\
-//          		 <option value=\"portrait\">Portrait (3/4)</option>\
-//          		 <option value=\"square\">Square (1/1)</option>\
-//          		 <option value=\"landscape\">Landscape (4/3)</option>\
-//          		 <option value=\"large\">Large (16/9)</option>\
-//          		 <option value=\"xlarge\">Extra-large (24/9)</option>\
 
     // beark html fragment !
     popin.html("\
@@ -982,13 +973,6 @@ function initUploadForm(popin) { //, image) {
                             edImage.size[0] = img.width;
                             edImage.size[1] = img.height;
 
-//                             let width = img.width;
-//                             img.width = editorImageWidth; //'300px';
-//                             img.height = Math.floor(img.height / width * editorImageWidth);
-//                             img.style.width = img.width + 'px';
-//                             img.style.height = img.height + 'px';
-//                             debugImg = img;
-// console.log(debugImg);
                             $('#uploaded-image').html(img.outerHTML);
 
                             $('#uploadcroppoi').change(function () {
@@ -1267,7 +1251,6 @@ $(document).ready(function () {
         height: 'auto',
         width: 'auto',
         open: function (event, ui) {
-            //console.log($(this).data('img'));
             initForm($(this), JSON.parse(decodeURI($(this).data('img'))));
             $( "#dialog-form" ).dialog( "option", "position", { my: "center top", at: "center top", of: window } );
         },
