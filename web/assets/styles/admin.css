@@ -1764,8 +1764,6 @@ a {
       .jcrop-coords {
         display: none;
         position: absolute;
-        bottom: -24px;
-        right: 7px;
         color: rgba(255, 255, 255, 0.8);
         padding: 1px 4px 0;
         font-size: 10px;
